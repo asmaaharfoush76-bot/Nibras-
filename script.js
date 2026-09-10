@@ -11,11 +11,9 @@
 const SUPABASE_URL = "https://wooixczgctxqhljfnjjn.supabase.co/rest/v1/";
 
 // ضعي هنا الـ anon/public key الذي يبدأ غالبًا بـ eyJ
-const SUPABASE_ANON_KEY =" eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Indvb2l4Y3pnY3R4cWhsamZuampuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODkwNDMzMzgsImV4cCI6MjEwNDYxOTMzOH0.jtxLOcID-x3VHY0mDQgg3HyxZhE6ltoDDC9IdNGW3Cc";
+const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Indvb2l4Y3pnY3R4cWhsamZuampuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODkwNDMzMzgsImV4cCI6MjEwNDYxOTMzOH0.jtxLOcID-x3VHY0mDQgg3HyxZhE6ltoDDC9IdNGW3Cc";
 
-const { createClient } = window.supabase;
-
-const supabaseClient = createClient(
+const supabaseClient = window.supabase.createClient(
   SUPABASE_URL,
   SUPABASE_ANON_KEY
 );
