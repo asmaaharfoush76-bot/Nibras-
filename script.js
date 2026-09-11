@@ -996,3 +996,133 @@ function safeUrl(value) {
 loadTheme();
 
 checkCurrentUser();
+-- =========================================
+-- NIBRAS ADMIN SECURITY
+-- =========================================
+
+-- 1) دالة آمنة لمعرفة هل المستخدم Admin
+CREATE OR REPLACE FUNCTION public.is_admin()
+RETURNS BOOLEAN
+LANGUAGE plpgsql
+SECURITY DEFINER
+SET search_path = public
+AS $$
+BEGIN
+  RETURN EXISTS (
+    SELECT 1
+    FROM public.profiles
+    WHERE id = auth.uid()
+      AND role = 'admin'
+  );
+END;
+$$;
+
+-- 2) منع استخدامها بدون تسجيل دخول
+REVOKE EXECUTE ON FUNCTION public.is_admin() FROM anon;
+GRANT EXECUTE ON FUNCTION public.is_admin() TO authenticated;
+
+
+-- =========================================
+-- PROFILES
+-- =========================================
+
+DROP POLICY IF EXISTS "admin read profiles" ON public.profiles;
+DROP POLICY IF EXISTS "admin update profiles" ON public.profiles;
+
+CREATE POLICY "admin read profiles"
+ON public.profiles
+FOR SELECT
+TO authenticated
+USING (
+  id = auth.uid()
+  OR public.is_admin()
+);
+
+CREATE POLICY "admin update profiles"
+ON public.profiles
+FOR UPDATE
+TO authenticated
+USING (
+  id = auth.uid()
+  OR public.is_admin()
+)
+WITH CHECK (
+  id = auth.uid()
+  OR public.is_admin()
+);
+
+
+-- =========================================
+-- EXAM ATTEMPTS / RESULTS
+-- =========================================
+
+DROP POLICY IF EXISTS "admin read exam attempts" ON public.exam_attempts;
+
+CREATE POLICY "admin read exam attempts"
+ON public.exam_attempts
+FOR SELECT
+TO authenticated
+USING (
+  student_id = auth.uid()
+  OR public.is_admin()
+);
+
+
+-- =========================================
+-- استبدال صلاحيات الأدمن للجداول
+-- =========================================
+
+DROP POLICY IF EXISTS "admin manage lessons" ON public.lessons;
+DROP POLICY IF EXISTS "admin manage books" ON public.books;
+DROP POLICY IF EXISTS "admin manage exams" ON public.exams;
+DROP POLICY IF EXISTS "admin manage exam questions" ON public.exam_questions;
+DROP POLICY IF EXISTS "admin manage badges" ON public.badges;
+DROP POLICY IF EXISTS "admin manage student badges" ON public.student_badges;
+
+
+CREATE POLICY "admin manage lessons"
+ON public.lessons
+FOR ALL
+TO authenticated
+USING (public.is_admin())
+WITH CHECK (public.is_admin());
+
+
+CREATE POLICY "admin manage books"
+ON public.books
+FOR ALL
+TO authenticated
+USING (public.is_admin())
+WITH CHECK (public.is_admin());
+
+
+CREATE POLICY "admin manage exams"
+ON public.exams
+FOR ALL
+TO authenticated
+USING (public.is_admin())
+WITH CHECK (public.is_admin());
+
+
+CREATE POLICY "admin manage exam questions"
+ON public.exam_questions
+FOR ALL
+TO authenticated
+USING (public.is_admin())
+WITH CHECK (public.is_admin());
+
+
+CREATE POLICY "admin manage badges"
+ON public.badges
+FOR ALL
+TO authenticated
+USING (public.is_admin())
+WITH CHECK (public.is_admin());
+
+
+CREATE POLICY "admin manage student badges"
+ON public.student_badges
+FOR ALL
+TO authenticated
+USING (public.is_admin())
+WITH CHECK (public.is_admin());
