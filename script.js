@@ -7,10 +7,9 @@
 // SUPABASE CONFIGURATION
 // ================================
 
-// ضعي هنا Project URL الذي نسختِه من Supabase
 const SUPABASE_URL = "https://wooixczgctxqhljfnjjn.supabase.co";
 
-// ضعي هنا الـ anon/public key الذي يبدأ غالبًا بـ eyJ
+// ضعي هنا نفس الـ anon/public key الموجود عندك حاليًا
 const SUPABASE_ANON_KEY = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Indvb2l4Y3pnY3R4cWhsamZuampuIiwicm9sZSI6ImFub24iLCJpYXQiOjE3ODkwNDMzMzgsImV4cCI6MjEwNDYxOTMzOH0.jtxLOcID-x3VHY0mDQgg3HyxZhE6ltoDDC9IdNGW3Cc";
 
 const supabaseClient = window.supabase.createClient(
@@ -260,7 +259,11 @@ registerForm.addEventListener("submit", async (event) => {
       options: {
         data: {
           full_name: fullName
-        }
+        },
+
+        // إصلاح رابط الرجوع بعد تأكيد البريد
+        emailRedirectTo:
+          "https://asmaaharfoush76-bot.github.io/Nibras-/"
       }
 
     });
