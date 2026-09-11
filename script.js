@@ -997,12 +997,13 @@ loadTheme();
 
 checkCurrentUser();
 // =========================================
-// NEBRAS | ADMIN MANAGEMENT CENTER
+// START
 // =========================================
 
-(function () {
+loadTheme();
 
-  let adminReady = false;
+checkCurrentUser();
+
 
   // -----------------------------------------
   // انتظار ظهور لوحة الأدمن
